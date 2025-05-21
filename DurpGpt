@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>Ask DurpGpt</title>
+</head>
+<body>
+  <h1>더프GPT에게 물어봐!</h1>
+  <input type="text" id="prompt" placeholder="질문을 입력하세요" size="50">
+  <button onclick="askGPT()">보내기</button>
+  <p><strong>GPT의 답변:</strong></p>
+  <div id="response" style="white-space: pre-wrap;"></div>
+
+  <script>
+    async function askGPT() {
+      const prompt = document.getElementById("prompt").value;
+
+      const response = await fetch('/.netlify/functions/chatgpt', {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt })
+      });
+
+      const data = await response.json();
+      document.getElementById("response").innerText = data.reply;
+    }
+  </script>
+</body>
+</html>
