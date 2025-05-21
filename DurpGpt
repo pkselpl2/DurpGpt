@@ -2,10 +2,10 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>Ask DurpGpt</title>
+  <title>나만의 GPT 챗봇</title>
 </head>
 <body>
-  <h1>더프GPT에게 물어봐!</h1>
+  <h1>GPT에게 물어봐!</h1>
   <input type="text" id="prompt" placeholder="질문을 입력하세요" size="50">
   <button onclick="askGPT()">보내기</button>
   <p><strong>GPT의 답변:</strong></p>
@@ -26,4 +26,26 @@
     }
   </script>
 </body>
-</html>
+</html>const fetch = require('node-fetch');
+
+exports.handler = async (event) => {
+  const { prompt } = JSON.parse(event.body);
+
+  const res = await fetch("https://api.openai.com/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${process.env.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}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      model: "gpt-3.5-turbo",
+      messages: [{ role: "user", content: prompt }]
+    })
+  });
+
+  const data = await res.json();
+  return {
+    statusCode: 200,
+    body: JSON.stringify({ reply: data.choices[0].message.content })
+  };
+};
